@@ -9,11 +9,26 @@ function ToastProvider({ children }) {
   const removeToast = (toastId) => setToasts(
     toasts.filter(({ id }) => id !== toastId)
   )
+  const removeAllToasts = () => setToasts([]);
+
+  React.useEffect(() => {
+    function handleEscapeKey(e) {
+      if (e?.code === "Escape") {
+        removeAllToasts();
+      }
+    }
+
+    window.addEventListener("keydown", handleEscapeKey);
+
+    return () => window.removeEventListener("keydown", handleEscapeKey);
+  }, []);
+
 
   return (
     <ToastContext.Provider value={{
       toasts,
       addToast,
+      removeAllToasts,
       removeToast,
     }}>
       {children}
